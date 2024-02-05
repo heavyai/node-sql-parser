@@ -32,20 +32,6 @@
     "sql-ast"
   ],
   "author": "taozhi8833998 <taozhi8833998@163.com>",
-  "files": [
-    "ast/",
-    "src",
-    "build",
-    "lib",
-    "umd/",
-    "index.d.ts",
-    "index.js",
-    "index.js.map",
-    "LICENSE",
-    "package.json",
-    "README.md",
-    "types.d.ts"
-  ],
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/taozhi8833998/node-sql-parser/issues"
