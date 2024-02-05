@@ -4493,8 +4493,13 @@ cast_double_colon
       properties: a.map(item => item[2]),
     }
   }
+
+cast_keyword
+  = KW_CAST
+  / KW_TRY_CAST
+
 cast_expr
-  = c:KW_CAST __ LPAREN __ e:expr __ KW_AS __ t:data_type __ RPAREN __ a:((DOUBLE_ARROW / SINGLE_ARROW) __ (literal_string / literal_numeric))*  {
+  = c:cast_keyword __ LPAREN __ e:expr __ KW_AS __ t:data_type __ RPAREN __ a:((DOUBLE_ARROW / SINGLE_ARROW) __ (literal_string / literal_numeric))*  {
     // => IGNORE
     return {
       type: 'cast',
@@ -4506,7 +4511,7 @@ cast_expr
       properties: a.map(item => item[2]),
     };
   }
-  / c:KW_CAST __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ RPAREN __ RPAREN {
+  / c:cast_keyword __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ RPAREN __ RPAREN {
     // => IGNORE
     return {
       type: 'cast',
@@ -4518,7 +4523,7 @@ cast_expr
       }
     };
   }
-  / c:KW_CAST __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ COMMA __ scale:int __ RPAREN __ RPAREN {
+  / c:cast_keyword __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ COMMA __ scale:int __ RPAREN __ RPAREN {
       // => IGNORE
       return {
         type: 'cast',
@@ -4530,7 +4535,7 @@ cast_expr
         }
       };
     }
-  / c:KW_CAST __ LPAREN __ e:expr __ KW_AS __ s:signedness __ t:KW_INTEGER? __ RPAREN { /* MySQL cast to un-/signed integer */
+  / c:cast_keyword __ LPAREN __ e:expr __ KW_AS __ s:signedness __ t:KW_INTEGER? __ RPAREN { /* MySQL cast to un-/signed integer */
     // => IGNORE
     return {
       type: 'cast',
@@ -4872,6 +4877,7 @@ KW_ELSE     = "ELSE"i       !ident_start
 KW_END      = "END"i        !ident_start
 
 KW_CAST     = "CAST"i       !ident_start { return 'CAST' }
+KW_TRY_CAST = "TRY_CAST"i   !ident_start { return 'TRY_CAST' }
 
 KW_BOOL     = "BOOL"i     !ident_start { return 'BOOL'; }
 KW_BOOLEAN  = "BOOLEAN"i  !ident_start { return 'BOOLEAN'; }
