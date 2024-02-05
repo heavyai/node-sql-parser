@@ -4416,6 +4416,14 @@ func_call
         over: up
     }
   }
+  / 'DATE_TRUNC'i __ LPAREN __ f:extract_field __ COMMA __ e:expr __ RPAREN {
+      return {
+        type: 'function',
+        name: 'DATE_TRUNC',
+        args: { type: 'expr_list', value: [{ type: 'string', value: f }, e] },
+        over: null,
+      };
+  }
   / name:proc_func_name __ LPAREN __ l:or_and_where_expr? __ RPAREN {
       // => { type: 'function'; name: string; args: expr_list; }
       if (l && l.type !== 'expr_list') l = { type: 'expr_list', value: [l] }
