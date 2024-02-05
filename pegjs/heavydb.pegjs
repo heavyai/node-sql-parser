@@ -3853,7 +3853,8 @@ exists_op
   / KW_EXISTS
 
 comparison_op_right
-  = arithmetic_op_right
+  = array_comparison_op_right
+  / arithmetic_op_right
   / in_op_right
   / between_op_right
   / is_op_right
@@ -3956,6 +3957,15 @@ in_op_right
   / op:in_op __ e:(var_decl / literal_string) {
     // => IGNORE
       return { op: op, right: e };
+    }
+
+array_comparison_op_right
+  = op:arithmetic_comparison_operator __ quantifier:('ALL'i / 'ANY'i / 'SOME'i) __ LPAREN __ l:(select_stmt / column_ref / expr_list) __ RPAREN {
+      l.parentheses = true;
+      return { op: op + ' ' + quantifier, right: l };
+    }
+  / op:arithmetic_comparison_operator __ quantifier:('ALL'i / 'ANY'i / 'SOME'i) __ e:(column_ref / literal_array) {
+      return { op: op + ' ' + quantifier, right: e };
     }
 
 jsonb_op_right
@@ -4535,6 +4545,14 @@ extract_func
         }
     }
   }
+  / 'DATE_TRUNC'i __  LPAREN __ e:expr __ COMMA __ f:extract_field __ RPAREN {
+    return {
+        type: 'function',
+        name: { name: [{ type: 'origin', value: 'date_trunc' }]},
+        args: { type: 'expr_list', value: [e, { type: 'origin', value: f }] },
+        over: null,
+      };
+  }
 
 scalar_time_func
   = KW_CURRENT_DATE
@@ -4567,8 +4585,13 @@ cast_double_colon
       properties: a.map(item => item[2]),
     }
   }
+
+cast_keyword
+  = KW_CAST
+  / KW_TRY_CAST
+
 cast_expr
-  = c:KW_CAST __ LPAREN __ e:expr __ KW_AS __ t:data_type __ RPAREN __ a:((DOUBLE_ARROW / SINGLE_ARROW) __ (literal_string / literal_numeric))*  {
+  = c:cast_keyword __ LPAREN __ e:expr __ KW_AS __ t:data_type __ RPAREN __ a:((DOUBLE_ARROW / SINGLE_ARROW) __ (literal_string / literal_numeric))*  {
     // => IGNORE
     return {
       type: 'cast',
@@ -4580,7 +4603,7 @@ cast_expr
       properties: a.map(item => item[2]),
     };
   }
-  / c:KW_CAST __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ RPAREN __ RPAREN {
+  / c:cast_keyword __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ RPAREN __ RPAREN {
     // => IGNORE
     return {
       type: 'cast',
@@ -4592,7 +4615,7 @@ cast_expr
       }
     };
   }
-  / c:KW_CAST __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ COMMA __ scale:int __ RPAREN __ RPAREN {
+  / c:cast_keyword __ LPAREN __ e:expr __ KW_AS __ KW_DECIMAL __ LPAREN __ precision:int __ COMMA __ scale:int __ RPAREN __ RPAREN {
       // => IGNORE
       return {
         type: 'cast',
@@ -4604,7 +4627,7 @@ cast_expr
         }
       };
     }
-  / c:KW_CAST __ LPAREN __ e:expr __ KW_AS __ s:signedness __ t:KW_INTEGER? __ RPAREN { /* MySQL cast to un-/signed integer */
+  / c:cast_keyword __ LPAREN __ e:expr __ KW_AS __ s:signedness __ t:KW_INTEGER? __ RPAREN { /* MySQL cast to un-/signed integer */
     // => IGNORE
     return {
       type: 'cast',
@@ -4949,6 +4972,7 @@ KW_ELSE     = "ELSE"i       !ident_start
 KW_END      = "END"i        !ident_start
 
 KW_CAST     = "CAST"i       !ident_start { return 'CAST' }
+KW_TRY_CAST = "TRY_CAST"i   !ident_start { return 'TRY_CAST' }
 
 KW_BOOL     = "BOOL"i     !ident_start { return 'BOOL'; }
 KW_BOOLEAN  = "BOOLEAN"i  !ident_start { return 'BOOLEAN'; }
@@ -4964,6 +4988,7 @@ KW_ZEROFILL = "ZEROFILL"i !ident_start { return 'ZEROFILL'; }
 KW_INTEGER  = "INTEGER"i  !ident_start { return 'INTEGER'; }
 KW_JSON     = "JSON"i     !ident_start { return 'JSON'; }
 KW_JSONB    = "JSONB"i    !ident_start { return 'JSONB'; }
+KW_GEOGRAPHY = "GEOGRAPHY"i !ident_start { return 'GEOGRAPHY'; }
 KW_GEOMETRY = "GEOMETRY"i !ident_start { return 'GEOMETRY'; }
 KW_SMALLINT = "SMALLINT"i !ident_start { return 'SMALLINT'; }
 KW_SERIAL = "SERIAL"i !ident_start { return 'SERIAL'; }
@@ -5328,6 +5353,7 @@ data_type
   / numeric_type
   / datetime_type
   / json_type
+  / geography_type
   / geometry_type
   / text_type
   / uuid_type
@@ -5411,6 +5437,9 @@ enum_type
 
 json_type
   = t:(KW_JSON / KW_JSONB) { /* =>  data_type */  return { dataType: t }; }
+
+geography_type
+  = t:KW_GEOGRAPHY {/* =>  data_type */  return { dataType: t }; }
 
 geometry_type
   = t:KW_GEOMETRY {/* =>  data_type */  return { dataType: t }; }
