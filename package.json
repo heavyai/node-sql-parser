@@ -33,7 +33,7 @@
   ],
   "author": "taozhi8833998 <taozhi8833998@163.com>",
   "files": [
-    "output"
+    "output/**/*"
   ],
   "license": "Apache-2.0",
   "bugs": {

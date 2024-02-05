@@ -33,14 +33,7 @@
   ],
   "author": "taozhi8833998 <taozhi8833998@163.com>",
   "files": [
-    "ast/",
-    "build",
-    "lib",
-    "umd/",
-    "LICENSE",
-    "package.json",
-    "README.md",
-    "output"
+    "output/**/*"
   ],
   "license": "Apache-2.0",
   "bugs": {
