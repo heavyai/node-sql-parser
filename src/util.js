@@ -129,6 +129,7 @@ function columnIdentifierToSql(ident) {
   if (!ident) return
   switch (database && database.toLowerCase()) {
     case 'postgresql':
+    case 'heavydb':
     case 'db2':
     case 'snowflake':
     case 'noql':
@@ -154,6 +155,7 @@ function identifierToSql(ident, isDual) {
     case 'sqlite':
       return `\`${ident}\``
     case 'postgresql':
+    case 'heavydb':
     case 'snowflake':
     case 'noql':
       return `"${ident}"`
