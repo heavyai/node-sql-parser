@@ -4893,6 +4893,7 @@ KW_ZEROFILL = "ZEROFILL"i !ident_start { return 'ZEROFILL'; }
 KW_INTEGER  = "INTEGER"i  !ident_start { return 'INTEGER'; }
 KW_JSON     = "JSON"i     !ident_start { return 'JSON'; }
 KW_JSONB    = "JSONB"i    !ident_start { return 'JSONB'; }
+KW_GEOGRAPHY = "GEOGRAPHY"i !ident_start { return 'GEOGRAPHY'; }
 KW_GEOMETRY = "GEOMETRY"i !ident_start { return 'GEOMETRY'; }
 KW_SMALLINT = "SMALLINT"i !ident_start { return 'SMALLINT'; }
 KW_SERIAL = "SERIAL"i !ident_start { return 'SERIAL'; }
@@ -5256,6 +5257,7 @@ data_type
   / numeric_type
   / datetime_type
   / json_type
+  / geography_type
   / geometry_type
   / text_type
   / uuid_type
@@ -5338,6 +5340,9 @@ enum_type
 
 json_type
   = t:(KW_JSON / KW_JSONB) { /* =>  data_type */  return { dataType: t }; }
+
+geography_type
+  = t:KW_GEOGRAPHY {/* =>  data_type */  return { dataType: t }; }
 
 geometry_type
   = t:KW_GEOMETRY {/* =>  data_type */  return { dataType: t }; }
