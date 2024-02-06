@@ -33,7 +33,16 @@
   ],
   "author": "taozhi8833998 <taozhi8833998@163.com>",
   "files": [
-    "output/**/*"
+    "output/prod/ast",
+    "output/prod/build",
+    "output/prod/lib",
+    "output/prod/umd",
+    "output/prod/aggregation.js",
+    "output/prod/alter.js",
+    "output/prod/index.d.ts",
+    "output/prod/index.js",
+    "output/prod/index.js.map",
+    "output/prod/types.d.ts"
   ],
   "license": "Apache-2.0",
   "bugs": {
