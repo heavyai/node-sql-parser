@@ -3827,7 +3827,8 @@ exists_op
   / KW_EXISTS
 
 comparison_op_right
-  = arithmetic_op_right
+  = array_comparison_op_right
+  / arithmetic_op_right
   / in_op_right
   / between_op_right
   / is_op_right
@@ -3930,6 +3931,15 @@ in_op_right
   / op:in_op __ e:(var_decl / literal_string) {
     // => IGNORE
       return { op: op, right: e };
+    }
+
+array_comparison_op_right
+  = op:arithmetic_comparison_operator __ quantifier:('ALL'i / 'ANY'i / 'SOME'i) __ LPAREN __ l:(select_stmt / column_ref / expr_list) __ RPAREN {
+      l.parentheses = true;
+      return { op: op + ' ' + quantifier, right: l };
+    }
+  / op:arithmetic_comparison_operator __ quantifier:('ALL'i / 'ANY'i / 'SOME'i) __ e:(column_ref / literal_array) {
+      return { op: op + ' ' + quantifier, right: e };
     }
 
 jsonb_op_right

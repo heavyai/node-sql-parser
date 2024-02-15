@@ -234,7 +234,7 @@ describe('mysql', () => {
         title: 'insert ignore into',
         sql: [
           "INSERT IGNORE INTO t1 (c1, c2) VALUES (1,1)",
-          "INSERT IGNORE INTO `t1` (`c1`, `c2`) VALUES (1,1)"
+          "INSERT IGNORE INTO `t1` (c1, c2) VALUES (1,1)"
         ],
       },
       {
@@ -934,6 +934,13 @@ describe('mysql', () => {
           '`name` VARCHAR(255) CHECK(`name` LIKE \'ABC%\' AND LENGTH(`name`) >= 5)\n' +
           ');',
           "CREATE TABLE `table` (`name` VARCHAR(255) CHECK (`name` LIKE 'ABC%' AND LENGTH(`name`) >= 5))"
+        ]
+      },
+      {
+        title: 'show index',
+        sql: [
+          'show index from user',
+          'SHOW INDEX FROM `user`'
         ]
       }
     ]

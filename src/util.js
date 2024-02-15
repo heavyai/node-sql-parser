@@ -133,6 +133,7 @@ function columnIdentifierToSql(ident) {
     case 'db2':
     case 'snowflake':
     case 'noql':
+    case 'heavydb':
       return `"${ident}"`
     case 'transactsql':
       return `[${ident}]`
@@ -158,6 +159,7 @@ function identifierToSql(ident, isDual) {
     case 'heavydb':
     case 'snowflake':
     case 'noql':
+    case 'heavydb':
       return `"${ident}"`
     case 'transactsql':
       return `[${ident}]`
