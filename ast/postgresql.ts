@@ -1105,29 +1105,33 @@ export type column_ref = string_constants_escape | {
 
 export type column_list = column[];
 
+export type ident_without_kw_type = { type: 'default', value: string } | quoted_ident_type;
+
+export type ident_type = ident_name | quoted_ident_type;
+
 export type ident = string;
 
 export type ident_list = ident[];
 
 export type alias_ident = string;
 
-export type quoted_ident = double_quoted_ident | single_quoted_ident | backticks_quoted_ident;
+export type quoted_ident_type = double_quoted_ident | single_quoted_ident | backticks_quoted_ident;
 
+export type quoted_ident = string;
 
+export type double_quoted_ident = { type: 'double_quote_string'; value: string; };
 
-export type double_quoted_ident = string;
+export type single_quoted_ident = { type: 'single_quote_string'; value: string; };
 
-
-
-export type single_quoted_ident = string;
-
-
-
-export type backticks_quoted_ident = string;
+export type backticks_quoted_ident = { type: 'backticks_quote_string'; value: string; };
 
 export type ident_without_kw = ident_name | quoted_ident;
 
 export type column_without_kw = column_name | quoted_ident;
+
+export type column_without_kw_type = { type: 'default', value: string } | quoted_ident_type;
+
+export type column_type = { type: 'default', value: string } | quoted_ident_type;
 
 
 
@@ -1199,11 +1203,11 @@ export type trim_position = "BOTH" | "LEADING" | "TRAILING";
 
 export type trim_rem = expr_list;
 
-export type trim_func_clause = { type: 'function'; name: string; args: expr_list; };
+export type trim_func_clause = { type: 'function'; name: proc_func_name; args: expr_list; };
 
-export type tablefunc_clause = { type: 'tablefunc'; name: crosstab; args: expr_list; as: func_call };
+export type tablefunc_clause = { type: 'tablefunc'; name: proc_func_name; args: expr_list; as: func_call };
 
-export type func_call = trim_func_clause | tablefunc_clause | { type: 'function'; name: string; args: expr_list; suffix: literal_string; } | { type: 'function'; name: string; args: expr_list; over?: over_partition; } | extract_func | { type: 'function'; name: string; over?: on_update_current_timestamp; } | { type: 'function'; name: string; args: expr_list; };
+export type func_call = trim_func_clause | tablefunc_clause | { type: 'function'; name: proc_func_name; args: expr_list; suffix: literal_string; } | { type: 'function'; name: proc_func_name; args: expr_list; over?: over_partition; } | extract_func | { type: 'function'; name: proc_func_name; over?: on_update_current_timestamp; } | { type: 'function'; name: proc_func_name; args: expr_list; };
 
 export type extract_field = 'string';
 
@@ -1730,7 +1734,7 @@ export type proc_join = { type: 'join'; ltable: var_decl; rtable: var_decl; op: 
 
 export type proc_primary = literal | var_decl | proc_func_call | param | proc_additive_expr & { parentheses: true; } | { type: 'var'; prefix: null; name: number; members: []; quoted: null } | column_ref;
 
-export type proc_func_name = string;
+export type proc_func_name = { schema?: ident_without_kw_type, name: ident_without_kw_type };
 
 export type proc_func_call = { type: 'function'; name: string; args: null | { type: expr_list; value: proc_primary_list; }};
 
