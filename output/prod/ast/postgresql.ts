@@ -559,7 +559,7 @@ export type table_option = {
       keyword: 'auto_increment' | 'avg_row_length' | 'key_block_size' | 'max_rows' | 'min_rows' | 'stats_sample_pages';
       symbol: '=';
       value: number; // <== literal_numeric['value']
-      } | create_option_character_set | { keyword: 'connection' | 'comment'; symbol: '='; value: string; } | { keyword: 'compression'; symbol: '='; value: "'ZLIB'" | "'LZ4'" | "'NONE'" } | { keyword: 'engine'; symbol: '='; value: string; };
+      } | create_option_character_set | { keyword: 'connection' | 'comment'; symbol: '='; value: string; } | { keyword: 'compression'; symbol?: '='; value: "'ZLIB'" | "'LZ4'" | "'NONE'" } | { keyword: 'engine'; symbol?: '='; value: string; } | { keyword: 'partition by'; value: expr; };
 
 export type ALTER_ADD_FULLETXT_SPARITAL_INDEX = create_fulltext_spatial_index_definition & { action: 'add'; type: 'alter' };
 
@@ -1103,6 +1103,8 @@ export type column_ref = string_constants_escape | {
         property?: (literal_string | literal_numeric)[];
       };
 
+export type column_ref_quoted = IGNORE;
+
 export type column_list = column[];
 
 export type ident_without_kw_type = { type: 'default', value: string } | quoted_ident_type;
@@ -1266,7 +1268,9 @@ export type literal_not_null = { type: 'not null'; value: 'not null' };
 
 export type literal_bool = { type: 'bool', value: true } | { type: 'bool', value: false };
 
-export type literal_string = { type: 'single_quote_string'; value: string; } | { type: 'string'; value: string; };
+export type literal_string = { type: 'single_quote_string'; value: string; } | literal_double_quoted_string;
+
+export type literal_double_quoted_string = { type: 'string'; value: string; };
 
 export type literal_datetime = { type: 'TIME' | 'DATE' | 'TIMESTAMP' | 'DATETIME', value: string };
 
@@ -1836,3 +1840,5 @@ export type uuid_type = data_type;
 
 
 export type record_type = data_type;
+
+export type custom_types = data_type;
