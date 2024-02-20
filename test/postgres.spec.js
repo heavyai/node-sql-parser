@@ -349,7 +349,7 @@ describe('Postgres', () => {
       ]
     },
     {
-      title: 'a multi-line single-quoted string',
+      title: 'left join',
       sql: [
         `select
         person.first_name,
@@ -1668,14 +1668,29 @@ describe('Postgres', () => {
           'SELECT CASE WHEN updated IS NOT NULL THEN (updated - created)::TIME END AS "some_time" FROM "some_table"'
         ]
       },
+      {
+        title: 'custom data type',
+        sql: [
+          `CREATE TYPE access_key_permission_kind AS ENUM ('FULL_ACCESS', 'FUNCTION_CALL');
+
+          CREATE TABLE
+          access_keys (
+          public_key text NOT NULL,
+          account_id text NOT NULL,
+          permission_kind access_key_permission_kind NOT NULL,
+          CONSTRAINT access_keys_pk PRIMARY KEY (public_key, account_id)
+          ) PARTITION BY HASH (public_key);`,
+          `CREATE TYPE "access_key_permission_kind" AS ENUM ('FULL_ACCESS', 'FUNCTION_CALL') ; CREATE TABLE "access_keys" (public_key TEXT NOT NULL, account_id TEXT NOT NULL, permission_kind access_key_permission_kind NOT NULL, CONSTRAINT "access_keys_pk" PRIMARY KEY (public_key, account_id)) PARTITION BY HASH(public_key)`
+        ]
+      },
     ]
     neatlyNestTestedSQL(SQL_LIST)
   })
 
   describe('pg ast', () => {
     it('should get correct columns and tables', () => {
-      const sql = 'SELECT "Id" FROM "Test";'
-      const ast = parser.parse(sql, opt)
+      let sql = 'SELECT "Id" FROM "Test";'
+      let ast = parser.parse(sql, opt)
       expect(ast.tableList).to.be.eql(['select::null::Test'])
       expect(ast.columnList).to.be.eql(['select::null::Id'])
       expect(ast.ast[0].columns).to.be.eql([
@@ -1695,6 +1710,34 @@ describe('Postgres', () => {
         }
       ])
       expect(parser.sqlify(ast.ast, opt)).to.be.equals(sql.slice(0, -1))
+      sql = 'SELECT col1 + "col2" FROM "t1"'
+      ast = parser.parse(sql, opt)
+      expect(ast.tableList).to.be.eql(['select::null::t1'])
+      expect(ast.columnList).to.be.eql(['select::null::col1', 'select::null::col2'])
+      expect(ast.ast.columns[0].expr.right).to.be.eql({
+        type: 'column_ref',
+        table: null,
+        column: {
+          expr: {
+            type: 'double_quote_string',
+            value: 'col2'
+          }
+        }
+      })
+      expect(parser.sqlify(ast.ast, opt)).to.be.equals('SELECT col1 + "col2" FROM "t1"')
+      sql = 'SELECT "col1" + "col2" FROM "t1"'
+      ast = parser.parse(sql, opt)
+      expect(ast.ast.columns[0].expr.left).to.be.eql({
+        type: 'column_ref',
+        table: null,
+        column: {
+          expr: {
+            type: 'double_quote_string',
+            value: 'col1'
+          }
+        }
+      })
+      expect(parser.sqlify(ast.ast, opt)).to.be.equals('SELECT "col1" + "col2" FROM "t1"')
     })
 
     it('should support conflict be empty', () => {
