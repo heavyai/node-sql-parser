@@ -1205,9 +1205,9 @@ export type tablefunc_clause = { type: 'tablefunc'; name: crosstab; args: expr_l
 
 export type func_call = trim_func_clause | tablefunc_clause | { type: 'function'; name: string; args: expr_list; suffix: literal_string; } | { type: 'function'; name: string; args: expr_list; over?: over_partition; } | extract_func | { type: 'function'; name: string; over?: on_update_current_timestamp; } | { type: 'function'; name: string; args: expr_list; };
 
-export type extract_filed = 'string';
+export type extract_field = 'string';
 
-export type extract_func = { type: 'extract'; args: { field: extract_filed; cast_type: 'TIMESTAMP' | 'INTERVAL' | 'TIME'; source: expr; }} | { type: 'extract'; args: { field: extract_filed; source: expr; }};
+export type extract_func = { type: 'extract'; args: { field: extract_field; cast_type: 'TIMESTAMP' | 'INTERVAL' | 'TIME'; source: expr; }} | { type: 'extract'; args: { field: extract_field; source: expr; }};
 
 export type scalar_time_func = KW_CURRENT_DATE | KW_CURRENT_TIME | KW_CURRENT_TIMESTAMP;
 

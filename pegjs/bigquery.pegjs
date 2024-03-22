@@ -2610,7 +2610,7 @@ any_value_func
     }
   }
 
-extract_filed
+extract_field
   = f:(
     'YEAR_MONTH'i / 'DAY_HOUR'i / 'DAY_MINUTE'i / 'DAY_SECOND'i / 'DAY_MICROSECOND'i / 'HOUR_MINUTE'i / 'HOUR_SECOND'i/ 'HOUR_MICROSECOND'i / 'MINUTE_SECOND'i / 'MINUTE_MICROSECOND'i / 'SECOND_MICROSECOND'i / 'TIMEZONE_HOUR'i / 'TIMEZONE_MINUTE'i
     / 'CENTURY'i / 'DAYOFWEEK'i / 'DAY'i / 'DATE'i / 'DECADE'i / 'DOW'i / 'DOY'i / 'EPOCH'i / 'HOUR'i / 'ISODOW'i / 'ISOWEEK'i / 'ISOYEAR'i / 'MICROSECONDS'i / 'MILLENNIUM'i / 'MILLISECONDS'i / 'MINUTE'i / 'MONTH'i / 'QUARTER'i / 'SECOND'i / 'TIME'i / 'TIMEZONE'i / 'WEEK'i / 'YEAR'i
@@ -2618,7 +2618,7 @@ extract_filed
     return f
   }
 extract_func
-  = kw:KW_EXTRACT __ LPAREN __ f:extract_filed __ KW_FROM __ t:(KW_TIMESTAMP / KW_INTERVAL / KW_TIME / KW_DATE) __ s:expr __ RPAREN {
+  = kw:KW_EXTRACT __ LPAREN __ f:extract_field __ KW_FROM __ t:(KW_TIMESTAMP / KW_INTERVAL / KW_TIME / KW_DATE) __ s:expr __ RPAREN {
     return {
         type: kw.toLowerCase(),
         args: {
@@ -2628,7 +2628,7 @@ extract_func
         }
     }
   }
-  / kw:KW_EXTRACT __ LPAREN __ f:extract_filed __ KW_FROM __ s:expr __ RPAREN {
+  / kw:KW_EXTRACT __ LPAREN __ f:extract_field __ KW_FROM __ s:expr __ RPAREN {
     return {
         type: kw.toLowerCase(),
         args: {
@@ -2637,7 +2637,7 @@ extract_func
         }
     }
   }
-  / 'DATE_TRUNC'i __  LPAREN __ e:expr __ COMMA __ f:extract_filed __ RPAREN {
+  / 'DATE_TRUNC'i __  LPAREN __ e:expr __ COMMA __ f:extract_field __ RPAREN {
     return {
         type: 'function',
         name: { name: [{ type: 'origin', value: 'date_trunc' }]},

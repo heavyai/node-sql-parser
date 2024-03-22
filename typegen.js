@@ -34,7 +34,7 @@ function buildExpression(r, onName) {
             return r.name;
         case 'literal':
             return JSON.stringify(r.value);
-        case 'labeled': // mmmh.. weird. Remove ? See extract_filed
+        case 'labeled': // mmmh.. weird. Remove ? See extract_field
             return buildExpression(r.expression, onName);
         case 'zero_or_more':
         case 'one_or_more':

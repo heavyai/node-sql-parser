@@ -4508,14 +4508,14 @@ func_call
       };
     }
 
-extract_filed
+extract_field
   = f:('CENTURY'i / 'DAY'i / 'DATE'i / 'DECADE'i / 'DOW'i / 'DOY'i / 'EPOCH'i / 'HOUR'i / 'ISODOW'i / 'ISOYEAR'i / 'MICROSECONDS'i / 'MILLENNIUM'i / 'MILLISECONDS'i / 'MINUTE'i / 'MONTH'i / 'QUARTER'i / 'SECOND'i / 'TIMEZONE'i / 'TIMEZONE_HOUR'i / 'TIMEZONE_MINUTE'i / 'WEEK'i / 'YEAR'i) {
     // => 'string'
     return f
   }
 extract_func
-  = kw:KW_EXTRACT __ LPAREN __ f:extract_filed __ KW_FROM __ t:(KW_TIMESTAMP / KW_INTERVAL / KW_TIME / KW_DATE)? __ s:expr __ RPAREN {
-    // => { type: 'extract'; args: { field: extract_filed; cast_type: 'TIMESTAMP' | 'INTERVAL' | 'TIME'; source: expr; }}
+  = kw:KW_EXTRACT __ LPAREN __ f:extract_field __ KW_FROM __ t:(KW_TIMESTAMP / KW_INTERVAL / KW_TIME / KW_DATE)? __ s:expr __ RPAREN {
+    // => { type: 'extract'; args: { field: extract_field; cast_type: 'TIMESTAMP' | 'INTERVAL' | 'TIME'; source: expr; }}
     return {
         type: kw.toLowerCase(),
         args: {
@@ -4525,8 +4525,8 @@ extract_func
         }
     }
   }
-  / kw:KW_EXTRACT __ LPAREN __ f:extract_filed __ KW_FROM __ s:expr __ RPAREN {
-    // => { type: 'extract'; args: { field: extract_filed; source: expr; }}
+  / kw:KW_EXTRACT __ LPAREN __ f:extract_field __ KW_FROM __ s:expr __ RPAREN {
+    // => { type: 'extract'; args: { field: extract_field; source: expr; }}
     return {
         type: kw.toLowerCase(),
         args: {
