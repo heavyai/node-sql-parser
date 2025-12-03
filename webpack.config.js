@@ -59,6 +59,7 @@ const getPlugins = (parserName, target, plugins = []) => {
         patterns: [
           'LICENSE',
           'lib',
+          'src',
           'README.md',
           'package.json',
           'types.d.ts',

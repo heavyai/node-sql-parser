@@ -3,6 +3,7 @@
   "version": "4.18.0",
   "description": "simple node sql parser",
   "main": "index.js",
+  "module": "output/prod/index.js",
   "types": "types.d.ts",
   "scripts": {
     "start": "webpack --config webpack.config.js",
@@ -13,7 +14,8 @@
     "coverLocal": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test",
     "cover:run": "cross-env NODE_ENV=coverage nyc --reporter=text-lcov npm run test",
     "cover": "npm run cover:run && nyc report --reporter=text-lcov | coveralls",
-    "release": "npm run build && npm publish output/prod"
+    "release": "npm run build && npm publish output/prod",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -37,13 +39,15 @@
     "build",
     "lib",
     "umd/",
+    "src/",
     "index.d.ts",
     "index.js",
     "index.js.map",
     "LICENSE",
     "package.json",
     "README.md",
-    "types.d.ts"
+    "types.d.ts",
+    "output/prod/"
   ],
   "license": "Apache-2.0",
   "bugs": {
