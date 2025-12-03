@@ -35,18 +35,6 @@
   ],
   "author": "taozhi8833998 <taozhi8833998@163.com>",
   "files": [
-    "ast/",
-    "build",
-    "lib",
-    "umd/",
-    "src/",
-    "index.d.ts",
-    "index.js",
-    "index.js.map",
-    "LICENSE",
-    "package.json",
-    "README.md",
-    "types.d.ts",
     "output/prod/"
   ],
   "license": "Apache-2.0",
