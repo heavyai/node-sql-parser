@@ -2,9 +2,16 @@
   "name": "node-sql-parser",
   "version": "4.18.0",
   "description": "simple node sql parser",
-  "main": "index.js",
-  "module": "output/prod/index.js",
-  "types": "types.d.ts",
+  "main": "output/prod/index.js",
+  "types": "output/prod/types.d.ts",
+  "exports": {
+    ".": {
+      "types": "./output/prod/types.d.ts",
+      "import": "./output/prod/index.js",
+      "require": "./output/prod/index.js"
+    },
+    "./*": "./output/prod/*"
+  },
   "scripts": {
     "start": "webpack --config webpack.config.js",
     "build": "npm run lint && npm run compile && webpack --config webpack.config.js --mode production",
