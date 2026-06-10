@@ -37,6 +37,7 @@
     "build",
     "lib",
     "src/",
+    "pegjs/",
     "umd/",
     "index.d.ts",
     "index.js",
