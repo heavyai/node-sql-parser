@@ -1,0 +1,9 @@
+{
+  "name": "vscode-mocha-hmr",
+  "version": "1.0.0",
+  "description": "HMR support for Mocha Test Explorer",
+  "main": "index.js",
+  "author": "Olivier Guimbal",
+  "repository": "https://github.com/oguimbal/vscode-mocha-hmr",
+  "license": "ISC"
+}
