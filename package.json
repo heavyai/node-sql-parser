@@ -2,23 +2,27 @@
   "name": "node-sql-parser",
   "version": "4.18.0",
   "description": "simple node sql parser",
-  "main": "index.js",
+  "main": "output/prod/index.js",
   "types": "types.d.ts",
   "scripts": {
     "start": "webpack --config webpack.config.js",
-    "build": "npm run lint && npm run compile && webpack --config webpack.config.js --mode production",
     "test": "npm run lint && mochapack \"test/**/*.spec.js\"",
     "lint": "eslint src",
     "compile": "babel src -d lib",
     "coverLocal": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test",
     "cover:run": "cross-env NODE_ENV=coverage nyc --reporter=text-lcov npm run test",
     "cover": "npm run cover:run && nyc report --reporter=text-lcov | coveralls",
-    "release": "npm run build && npm publish output/prod"
+    "release": "npm run build && npm publish output/prod",
+    "bundle": "webpack --config webpack.config.js --mode production",
+    "build": "npm run lint && npm run compile && npm run bundle",
+    "build:ci": "npm run compile && npm run bundle",
+    "prepare": "npm run build:ci"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/taozhi8833998/node-sql-parser.git"
   },
+
   "pre-commit": "coverLocal",
   "keywords": [
     "sql",
@@ -33,17 +37,12 @@
   ],
   "author": "taozhi8833998 <taozhi8833998@163.com>",
   "files": [
-    "ast/",
-    "build",
-    "lib",
-    "umd/",
+    "output/prod/",
     "index.d.ts",
-    "index.js",
-    "index.js.map",
+    "types.d.ts",
     "LICENSE",
-    "package.json",
     "README.md",
-    "types.d.ts"
+    "third_party_licenses/"
   ],
   "license": "Apache-2.0",
   "bugs": {
